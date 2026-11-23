@@ -149,6 +149,16 @@ html.intro,html.intro body{overflow:hidden;height:100%}
 .pt td,.pt th{padding:9px 12px}
 .pt td:first-child{font-family:var(--mono);white-space:nowrap;color:var(--cy);font-weight:500}
 .lbl{font:700 .85rem var(--sans);color:var(--mute);margin:0 0 6px}
+
+.demog{display:grid;grid-template-columns:1.9fr 1fr;gap:26px;align-items:start;margin-bottom:46px}
+@media(max-width:900px){.demog{grid-template-columns:1fr}}
+.vbox video{width:100%;display:block;border-radius:16px;border:1px solid var(--line);background:#05071a;aspect-ratio:1920/1040}
+.chap{display:flex;flex-direction:column;gap:4px;max-height:430px;overflow-y:auto}
+.chap button{display:flex;gap:12px;align-items:baseline;text-align:left;border:0;border-left:3px solid var(--line);background:transparent;color:var(--mute);font:500 .92rem/1.35 var(--sans);padding:7px 10px;cursor:pointer}
+.chap button:hover,.chap button.on{color:var(--ink);border-left-color:var(--cy)}
+.chap button b{font:500 .8rem var(--mono);color:var(--cy);min-width:3.2em}
+.num{text-align:right;font-family:var(--mono)}
+.res td:nth-child(2){color:var(--mute)}
 </style>
 </head>
 <body>
@@ -161,7 +171,7 @@ html.intro,html.intro body{overflow:hidden;height:100%}
 
 <nav><div class="wrap">
 <a class="brand" href="#top">Edgecase-Provocateur</a>
-<a class="l" href="#features">Features</a><a class="l" href="#use">Use it</a><a class="l" href="#docs">Docs</a><a class="l" href="#compare">Compare</a><a class="l" href="#road">Roadmap</a>
+<a class="l" href="#features">Features</a><a class="l" href="#use">Use it</a><a class="l" href="#demo">Live demo</a><a class="l" href="#docs">Docs</a><a class="l" href="#compare">Compare</a><a class="l" href="#road">Roadmap</a>
 <a class="btn ghost" href="https://github.com/ahmed123-ar/edgecase-provocateur">GitHub</a>
 <button class="tog" id="tog" aria-label="Switch light or dark theme">◐</button>
 </div></nav>
@@ -179,7 +189,7 @@ html.intro,html.intro body{overflow:hidden;height:100%}
 <div class="bar"><i></i><i></i><i></i><span>demo.py · try an input</span></div>
 <pre class="code" id="code" aria-label="The function being probed"></pre>
 <div class="chips" id="chips" role="group" aria-label="Choose an input to probe"></div>
-<div class="hint">Pick an input. The real tool does this automatically, one argument at a time. This page replays recorded results.</div>
+<div class="hint">Pick an input. The real tool does this automatically, one argument at a time. This is a scripted replay. The real run on JupyterHub is in the Live demo section below.</div>
 <pre class="out" id="out" aria-live="polite"></pre>
 </div>
 </div>
@@ -237,6 +247,25 @@ scale = None → TypeError</pre></div>
 </div></section>
 
 
+
+<section id="demo"><div class="wrap">
+<h2>Live demo on JupyterHub</h2>
+<p class="sub">The package installed from PyPI and run on the course JupyterHub, on eight different functions. Typing is sped up 8×; every output plays at normal speed. Pick a chapter to jump to it.</p>
+<div class="demog"><div class="vbox"><video id="dv" controls preload="metadata" playsinline poster="poster.jpg" src="jupyterhub_demo.mp4"></video></div><div class="chap" id="chap" aria-label="Video chapters"></div></div>
+<h3 style="margin:0 0 6px;font-size:1.3rem;letter-spacing:-.02em">What each scenario found</h3>
+<p class="sub" style="margin-bottom:20px">Counts are copied from the summary cell at the end of the recording. Different inputs, different edge cases.</p>
+<div class="tw"><table class="res">
+<tr><th>Function</th><th>Input type</th><th class="num">Probes</th><th class="num">Crashed</th><th class="num">Warnings</th><th>What it found</th></tr>
+<tr><td><code>find_max_difference</code></td><td>list</td><td class="num">6</td><td class="num">4</td><td class="num">0</td><td>IndexError on an empty list; TypeError for [None] and mixed types</td></tr>
+<tr><td><code>parse_age</code></td><td>string</td><td class="num">7</td><td class="num">7</td><td class="num">0</td><td>ValueError on every text probe (symbols, Unicode, long strings)</td></tr>
+<tr><td><code>get_email</code></td><td>dictionary</td><td class="num">4</td><td class="num">2</td><td class="num">0</td><td>KeyError when the key is missing</td></tr>
+<tr><td><code>average</code></td><td>type hints only</td><td class="num">15</td><td class="num">5</td><td class="num">5</td><td>Example inferred from hints; warnings for inf and nan results</td></tr>
+<tr><td><code>top_score</code></td><td>list, modifies input</td><td class="num">6</td><td class="num">2</td><td class="num">1</td><td>Crashes on an empty or mixed list; warns that the input was modified</td></tr>
+<tr><td><code>first_even</code></td><td>list, returns None</td><td class="num">6</td><td class="num">2</td><td class="num">3</td><td>TypeError for None; warns when the result is None</td></tr>
+<tr><td><code>count_down</code></td><td>integer, infinite loop</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td>TimeoutError for inputs that never reach zero (see the video)</td></tr>
+<tr><td><code>first_word</code></td><td>string, with @provoke</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td>Report printed first, then the normal result (see the video)</td></tr>
+</table></div>
+</div></section>
 <section id="docs"><div class="wrap">
 <h2>Documentation: every function and what it gives back</h2>
 <p class="sub">Everything the package exposes, how each piece works, and the kind of output you get. Import from <code>edgecase_provocateur</code>.</p>
@@ -440,6 +469,16 @@ D.forEach(function(f){
 var links=[].slice.call(side.querySelectorAll("a"));
 if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.toggle("on",l.getAttribute("href")==="#"+e.target.id)})}})},{rootMargin:"-30% 0px -60% 0px"});
  [].forEach.call(body.children,function(a){io.observe(a)})}
+})();
+</script>
+
+<script>
+(function(){
+var C=[["Step 1 \u00b7 Install from PyPI on JupyterHub", 4.0], ["Step 2 \u00b7 Import the package", 14.1], ["Scenario 1 \u00b7 list input (empty list, None, mixed types)", 30.0], ["Scenario 2 \u00b7 string input (empty text, symbols, Unicode)", 51.2], ["Scenario 3 \u00b7 dictionary input (missing key, None value)", 65.7], ["Scenario 4 \u00b7 no example call: inferred from type hints", 86.8], ["Scenario 5 \u00b7 infinite loop caught by the per-probe timeout", 106.6], ["Scenario 6a \u00b7 silent problem: the function modifies its own input", 123.6], ["Scenario 6b \u00b7 silent problem: returns None for some inputs", 152.4], ["Scenario 7 \u00b7 the @provoke decorator", 167.1], ["Scenario 8a \u00b7 text report", 187.8], ["Scenario 8b \u00b7 other output formats (string and HTML)", 212.6], ["Scenario 8c \u00b7 use the report object in your own code", 255.6], ["Summary \u00b7 all scenarios in one run", 267.6]],dv=document.getElementById("dv"),box=document.getElementById("chap"),bs=[];
+function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+":"+(s<10?"0":"")+s}
+C.forEach(function(c){var b=document.createElement("button"),t=document.createElement("b");t.textContent=fmt(c[1]);b.appendChild(t);b.appendChild(document.createTextNode(c[0]));
+ b.onclick=function(){dv.currentTime=c[1];dv.play()};box.appendChild(b);bs.push(b)});
+dv.addEventListener("timeupdate",function(){var k=0;C.forEach(function(c,i){if(dv.currentTime>=c[1])k=i});bs.forEach(function(b,i){b.classList.toggle("on",i===k)})});
 })();
 </script>
 </body>
