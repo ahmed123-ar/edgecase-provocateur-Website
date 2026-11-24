@@ -159,6 +159,48 @@ html.intro,html.intro body{overflow:hidden;height:100%}
 .chap button b{font:500 .8rem var(--mono);color:var(--cy);min-width:3.2em}
 .num{text-align:right;font-family:var(--mono)}
 .res td:nth-child(2){color:var(--mute)}
+
+/* responsive fixes: let grid/flex children shrink instead of forcing the page wider */
+.wrap>*,.hero .wrap>*,.problem>*,.dg>*,.demog>*,.fr>*,.road>*,.facts>*{min-width:0}
+#dbody,.dg,.fn{max-width:100%}
+.sig,.ex,.so,.fr pre,.panel pre,.out,.code{max-width:100%}
+.fn h3{overflow-wrap:anywhere}
+.get,.fn p,.sub,.lead{overflow-wrap:anywhere}
+img,video{max-width:100%}
+@media(max-width:900px){.dside{max-width:100%}.chap{max-height:260px}h2{max-width:none}}
+@media(max-width:600px){
+ body{font-size:1rem}
+ .wrap{padding:0 16px}
+ nav .wrap{gap:10px;height:56px}
+ .brand{font-size:1rem}
+ .btn{padding:8px 13px;font-size:.88rem}
+ .hero{padding:40px 0 52px}
+ .hero .wrap{gap:30px}
+ h1{font-size:2.15rem}
+ .lead{font-size:1.05rem;max-width:none}
+ .pip{display:flex;flex-wrap:wrap;font-size:.85rem;width:100%}
+ section{padding:54px 0}
+ .code{font-size:.72rem}
+ .out{font-size:.7rem;min-height:190px}
+ .chips{padding:12px 12px 4px}
+ .big{font-size:1.25rem}
+ .fr{padding:20px 0}
+ .fn{padding-bottom:34px;margin-bottom:34px}
+ .fn h3{font-size:1.2rem}
+ .sig,.ex,.so{font-size:.76rem;padding:11px 12px}
+ .pt td:first-child{white-space:normal}
+ .facts{grid-template-columns:1fr 1fr;gap:16px}
+ .facts b{font-size:1.35rem}
+ .stage{padding-right:0;margin-bottom:26px}
+ .tab{padding:7px 13px;font-size:.85rem}
+ .panel pre{font-size:.76rem;padding:14px;min-height:0}
+ th,td{padding:11px 12px}
+ .team span{padding:8px 14px}
+ footer .wrap{flex-direction:column}
+ #intro .ctl{gap:8px}
+ #intro .ctl button{padding:8px 12px;font-size:.82rem}
+}
+@media(max-width:380px){h1{font-size:1.9rem}.facts{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -257,7 +299,7 @@ scale = None → TypeError</pre></div>
 <div class="tw"><table class="res">
 <tr><th>Function</th><th>Input type</th><th class="num">Probes</th><th class="num">Crashed</th><th class="num">Warnings</th><th>What it found</th></tr>
 <tr><td><code>find_max_difference</code></td><td>list</td><td class="num">6</td><td class="num">4</td><td class="num">0</td><td>IndexError on an empty list; TypeError for [None] and mixed types</td></tr>
-<tr><td><code>parse_age</code></td><td>string</td><td class="num">7</td><td class="num">7</td><td class="num">0</td><td>ValueError on every text probe (symbols, Unicode, long strings)</td></tr>
+<tr><td><code>parse_age</code></td><td>string</td><td class="num">7</td><td class="num">7</td><td class="num">0</td><td>ValueError on every text probe (symbols, Unicode, long strings; the demo caps string length with max_str_len=20 so the table fits)</td></tr>
 <tr><td><code>get_email</code></td><td>dictionary</td><td class="num">4</td><td class="num">2</td><td class="num">0</td><td>KeyError when the key is missing</td></tr>
 <tr><td><code>average</code></td><td>type hints only</td><td class="num">15</td><td class="num">5</td><td class="num">5</td><td>Example inferred from hints; warnings for inf and nan results</td></tr>
 <tr><td><code>top_score</code></td><td>list, modifies input</td><td class="num">6</td><td class="num">2</td><td class="num">1</td><td>Crashes on an empty or mixed list; warns that the input was modified</td></tr>
@@ -474,7 +516,7 @@ if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es
 
 <script>
 (function(){
-var C=[["Step 1 \u00b7 Install from PyPI on JupyterHub", 4.0], ["Step 2 \u00b7 Import the package", 14.1], ["Scenario 1 \u00b7 list input (empty list, None, mixed types)", 30.0], ["Scenario 2 \u00b7 string input (empty text, symbols, Unicode)", 51.2], ["Scenario 3 \u00b7 dictionary input (missing key, None value)", 65.7], ["Scenario 4 \u00b7 no example call: inferred from type hints", 86.8], ["Scenario 5 \u00b7 infinite loop caught by the per-probe timeout", 106.6], ["Scenario 6a \u00b7 silent problem: the function modifies its own input", 123.6], ["Scenario 6b \u00b7 silent problem: returns None for some inputs", 152.4], ["Scenario 7 \u00b7 the @provoke decorator", 167.1], ["Scenario 8a \u00b7 text report", 187.8], ["Scenario 8b \u00b7 other output formats (string and HTML)", 212.6], ["Scenario 8c \u00b7 use the report object in your own code", 255.6], ["Summary \u00b7 all scenarios in one run", 267.6]],dv=document.getElementById("dv"),box=document.getElementById("chap"),bs=[];
+var C=[["Step 1 · Install from PyPI on JupyterHub", 4.0], ["Step 2 · Import the package", 14.1], ["Scenario 1 · list input (empty list, None, mixed types)", 30.0], ["Scenario 2 · string input (max_str_len=20 keeps the table narrow)", 51.2], ["Scenario 3 · dictionary input (missing key, None value)", 69.9], ["Scenario 4 · no example call: inferred from type hints", 91.5], ["Scenario 5 · infinite loop caught by the per-probe timeout", 111.3], ["Scenario 6a · silent problem: the function modifies its own input", 128.3], ["Scenario 6b · silent problem: returns None for some inputs", 157.0], ["Scenario 7 · the @provoke decorator", 171.8], ["Scenario 8a · text report", 192.4], ["Scenario 8b · other output formats (string and HTML)", 217.3], ["Scenario 8c · use the report object in your own code", 260.3], ["Summary · all scenarios in one run", 272.3]],dv=document.getElementById("dv"),box=document.getElementById("chap"),bs=[];
 function fmt(t){var m=Math.floor(t/60),s=Math.floor(t%60);return m+":"+(s<10?"0":"")+s}
 C.forEach(function(c){var b=document.createElement("button"),t=document.createElement("b");t.textContent=fmt(c[1]);b.appendChild(t);b.appendChild(document.createTextNode(c[0]));
  b.onclick=function(){dv.currentTime=c[1];dv.play()};box.appendChild(b);bs.push(b)});
